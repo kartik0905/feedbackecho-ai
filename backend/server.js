@@ -4,6 +4,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import reviewRoutes from "./reviews.routes.js";
 import { errorHandler } from "./error.middleware.js";
+import authRoutes from "./auth.routes.js";
 
 dotenv.config();
 
@@ -15,6 +16,7 @@ app.use(express.json());
 
 // Mount Routes
 app.use("/api/reviews", reviewRoutes);
+app.use("/api/auth", authRoutes);
 
 // Error Handler (Must be last middleware)
 app.use(errorHandler);
