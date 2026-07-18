@@ -1,13 +1,12 @@
+import "dotenv/config";
 import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
-import dotenv from "dotenv";
 import reviewRoutes from "./reviews.routes.js";
-import { errorHandler } from "./error.middleware.js";
-import authRoutes from "./auth.routes.js";
 import aiRoutes from "./ai.routes.js";
+import authRoutes from "./auth.routes.js";
+import { errorHandler } from "./error.middleware.js";
 
-dotenv.config();
 
 const app = express();
 
