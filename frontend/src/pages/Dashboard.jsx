@@ -150,7 +150,10 @@ export default function Dashboard() {
                   </span>
                 </p>
                 <p className="text-gray-700 dark:text-gray-300">
-                  <strong>Drafted Reply:</strong> {aiResponse.draftedResponse}
+                  <strong>Drafted Reply:</strong>{" "}
+                  {typeof aiResponse.draftedResponse === "object"
+                    ? aiResponse.draftedResponse.text
+                    : aiResponse.draftedResponse}
                 </p>
               </div>
             )}
