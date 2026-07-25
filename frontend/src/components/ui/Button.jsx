@@ -11,6 +11,8 @@ export default function Button({
   onClick,
   variant = "primary",
   className = "",
+  type = "button",
+  disabled = false,
 }) {
   const baseStyle =
     "px-4 py-2 rounded-md font-semibold transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2";
@@ -25,8 +27,10 @@ export default function Button({
 
   return (
     <button
+      type={type}
       onClick={onClick}
-      className={`${baseStyle} ${variants[variant]} ${className}`}
+      disabled={disabled}
+      className={`${baseStyle} ${variants[variant]} disabled:cursor-not-allowed disabled:opacity-60 ${className}`}
     >
       {children}
     </button>
