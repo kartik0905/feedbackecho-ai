@@ -43,6 +43,14 @@
 
 ---
 
-## Setup
+## Frontend setup
 
-Setup — coming soon.
+1. Copy `backend/.env.example` to `backend/.env` and fill in the database, JWT, Groq, and Google values.
+2. Copy `frontend/.env.example` to `frontend/.env`. For local development, keep `VITE_API_URL=http://localhost:3000/api`.
+3. In separate terminals, run `npm run dev` inside `backend` and `frontend`.
+
+The dashboard is protected by JWT authentication. Reviews are stored with their owner, so the API only returns and changes the logged-in user's records.
+
+## Submission capture checklist
+
+Capture the PDF from a real, logged-in session—never from placeholder data. Include the dashboard, a created review in the list, an edit followed by deletion, the AI input/loading/result sequence, an empty review state, and side-by-side 375px and 1440px views. Make the final page a Chrome DevTools Network capture with three successful API calls and the URL/Size columns visible. Save it as `W8_FrontendCompletion_[InternID].pdf`.
