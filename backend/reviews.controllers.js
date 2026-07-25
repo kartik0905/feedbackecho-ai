@@ -3,7 +3,7 @@ import Review from "./reviews.models.js";
 // 1. POST: Create a new review
 export const createReview = async (req, res, next) => {
   try {
-    const review = await Review.create(req.body);
+    const review = await Review.create({ ...req.body, owner: req.user._id });
     res.status(201).json({ success: true, data: review });
   } catch (error) {
     next(error);
@@ -13,7 +13,7 @@ export const createReview = async (req, res, next) => {
 // 2. GET: List all reviews
 export const getReviews = async (req, res, next) => {
   try {
-    const reviews = await Review.find().sort({ createdAt: -1 });
+    const reviews = await Review.find({ owner: req.user._id }).sort({ createdAt: -1 });
     res
       .status(200)
       .json({ success: true, count: reviews.length, data: reviews });
@@ -25,7 +25,7 @@ export const getReviews = async (req, res, next) => {
 // 3. GET: Single review by ID
 export const getReviewById = async (req, res, next) => {
   try {
-    const review = await Review.findById(req.params.id);
+    const review = await Review.findOne({ _id: req.params.id, owner: req.user._id });
     if (!review)
       return res
         .status(404)
@@ -39,7 +39,7 @@ export const getReviewById = async (req, res, next) => {
 // 4. PUT/PATCH: Update a review
 export const updateReview = async (req, res, next) => {
   try {
-    const review = await Review.findByIdAndUpdate(req.params.id, req.body, {
+    const review = await Review.findOneAndUpdate({ _id: req.params.id, owner: req.user._id }, req.body, {
       new: true,
       runValidators: true,
     });
@@ -56,7 +56,7 @@ export const updateReview = async (req, res, next) => {
 // 5. DELETE: Remove a review
 export const deleteReview = async (req, res, next) => {
   try {
-    const review = await Review.findByIdAndDelete(req.params.id);
+    const review = await Review.findOneAndDelete({ _id: req.params.id, owner: req.user._id });
     if (!review)
       return res
         .status(404)
@@ -71,7 +71,7 @@ export const deleteReview = async (req, res, next) => {
 export const filterReviewsByBadge = async (req, res, next) => {
   try {
     const { badge } = req.query;
-    const reviews = await Review.find({ badge: badge });
+    const reviews = await Review.find({ badge, owner: req.user._id });
     res
       .status(200)
       .json({ success: true, count: reviews.length, data: reviews });
