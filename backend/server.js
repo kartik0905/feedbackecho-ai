@@ -11,7 +11,7 @@ import { errorHandler } from "./error.middleware.js";
 const app = express();
 
 // Middleware
-app.use(cors());
+app.use(cors({ origin: process.env.CLIENT_URL || "http://localhost:5173" }));
 app.use(express.json());
 
 // Mount Routes
