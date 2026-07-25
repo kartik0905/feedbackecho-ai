@@ -10,6 +10,12 @@ const reviewSchema = new mongoose.Schema(
       default: "Neutral",
     },
     author: { type: String, default: "Anonymous Guest" },
+    owner: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+      index: true,
+    },
   },
   { timestamps: true },
 );
