@@ -11,9 +11,9 @@ import { protect } from "./auth.middleware.js";
 
 const router = express.Router();
 
+router.use(protect);
 router.route("/search").get(filterReviewsByBadge); // Must be above /:id
 router.route("/").get(getReviews).post(createReview);
 router.route("/:id").get(getReviewById).put(updateReview).delete(deleteReview);
-router.route("/").get(protect, getReviews).post(protect, createReview);
 
 export default router;
