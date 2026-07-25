@@ -1,10 +1,13 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 
 export default function Navbar() {
   const [isDark, setIsDark] = useState(() => {
     return localStorage.getItem("theme") === "dark";
   });
+  const navigate = useNavigate();
+  const isAuthenticated = Boolean(localStorage.getItem("token"));
+  const logout = () => { localStorage.removeItem("token"); navigate("/login"); };
 
   useEffect(() => {
     if (isDark) {
@@ -41,12 +44,7 @@ export default function Navbar() {
           >
             About
           </Link>
-          <Link
-            to="/login"
-            className="hover:text-blue-600 dark:hover:text-blue-400"
-          >
-            Login
-          </Link>
+          {isAuthenticated ? <button onClick={logout} className="hover:text-blue-600 dark:hover:text-blue-400">Logout</button> : <Link to="/login" className="hover:text-blue-600 dark:hover:text-blue-400">Login</Link>}
 
           <button
             onClick={() => setIsDark(!isDark)}
