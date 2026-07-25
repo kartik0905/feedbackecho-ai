@@ -4,46 +4,32 @@ import { GoogleLogin } from "@react-oauth/google";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { Button, Input, Toast } from "../components/ui";
+import { api } from "../lib/api";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [toastMsg, setToastMsg] = useState("");
+  const [isError, setIsError] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    const res = await fetch("http://localhost:3000/api/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-    });
-    const data = await res.json();
-
-    if (data.success) {
+    setSubmitting(true);
+    try {
+      const data = await api("/auth/login", { method: "POST", body: JSON.stringify({ email, password }) });
       localStorage.setItem("token", data.token);
       navigate("/dashboard");
-    } else {
-      setToastMsg(data.error);
-      setTimeout(() => setToastMsg(""), 3000);
-    }
+    } catch (error) { setIsError(true); setToastMsg(error.message); setTimeout(() => setToastMsg(""), 3000); } finally { setSubmitting(false); }
   };
 
   const handleGoogleSuccess = async (credentialResponse) => {
-    const res = await fetch("http://localhost:3000/api/auth/google", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ credential: credentialResponse.credential }),
-    });
-    const data = await res.json();
-
-    if (data.success) {
+    try {
+      const data = await api("/auth/google", { method: "POST", body: JSON.stringify({ credential: credentialResponse.credential }) });
       localStorage.setItem("token", data.token);
       navigate("/dashboard");
-    } else {
-      setToastMsg(data.error);
-      setTimeout(() => setToastMsg(""), 3000);
-    }
+    } catch (error) { setIsError(true); setToastMsg(error.message); setTimeout(() => setToastMsg(""), 3000); }
   };
 
   return (
@@ -60,15 +46,15 @@ export default function Login() {
               label="University Email (@geu.ac.in)"
               type="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => setEmail(e.target.value)} required
             />
             <Input
               label="Password"
               type="password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => setPassword(e.target.value)} required
             />
-            <Button className="w-full">Login</Button>
+            <Button type="submit" disabled={submitting} className="w-full">{submitting ? "Signing in…" : "Login"}</Button>
           </form>
 
           <div className="flex items-center justify-center my-4">
@@ -84,7 +70,7 @@ export default function Login() {
             />
           </div>
         </div>
-        <Toast message={toastMsg} isVisible={!!toastMsg} />
+        <Toast message={toastMsg} variant={isError ? "error" : "success"} isVisible={!!toastMsg} />
       </main>
       <Footer />
     </div>
